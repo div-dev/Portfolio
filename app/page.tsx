@@ -8,7 +8,7 @@ import Contact from "./sections/Contact";
 
 export default function Home() {
   return (
-    <main className="bg-[#FAF9F6] dark:bg-[#1C1C1E] transition-colors duration-200">
+    <main id="page-main">
       <Navbar />
       <Hero />
       <About />

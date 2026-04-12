@@ -1,109 +1,151 @@
 "use client";
 import { motion } from "framer-motion";
+import { useFunMode } from "../components/FunModeProvider";
 
 const projects = [
   {
+    num: "01",
     title: "LogIntel",
-    description:
-      "Real-time log ingestion, anomaly detection, and AI-powered analysis pipeline. Kafka-driven architecture with FastAPI services, rule-based anomaly flagging, Claude AI summarization with Redis caching, and a query API for logs and reports.",
+    description: "Real-time log ingestion, anomaly detection, and AI-powered analysis pipeline. Kafka-driven architecture with FastAPI services, rule-based anomaly flagging, Claude AI summarization with Redis caching, and a query API for logs and reports.",
     tech: ["Python", "FastAPI", "Apache Kafka", "PostgreSQL", "Redis", "Docker", "Anthropic API"],
-    accent: "bg-[#C4B5F4]/10 dark:bg-[#7C6FCD]/10 border-[#C4B5F4]/30 dark:border-[#7C6FCD]/30",
-    bar: "bg-[#C4B5F4] dark:bg-[#7C6FCD]",
     link: "https://github.com/div-dev/logIntel",
   },
   {
+    num: "02",
     title: "Formbricks Lifecycle Automation",
-    description:
-      "Python CLI tool that spins up and tears down a full Formbricks instance via Docker Compose with a single command. Integrates OpenAI, Claude, and Ollama to generate synthetic surveys, users, and responses — all seeded through the REST API with no direct DB writes. Modular architecture with retry logic, rate-limit awareness, and cross-platform support.",
+    description: "Python CLI tool that spins up and tears down a full Formbricks instance via Docker Compose with a single command. Integrates OpenAI, Claude, and Ollama to generate synthetic surveys, users, and responses — all seeded through the REST API with no direct DB writes.",
     tech: ["Python", "Docker", "OpenAI", "Anthropic", "Ollama", "PostgreSQL", "Redis"],
-    accent: "bg-[#F4C0D1]/10 dark:bg-[#D4537E]/10 border-[#F4C0D1]/30 dark:border-[#D4537E]/30",
-    bar: "bg-[#F4C0D1] dark:bg-[#D4537E]",
     link: "https://github.com/div-dev/formbricks_task",
   },
   {
+    num: "03",
     title: "LogStream",
-    description:
-      "NVM logging simulator in C++ with MESI cache-coherency protocol to minimize persistent writes. Parallelized logging with std::thread and std::atomic reduced latency by 45% and write counts by 50% through lock-free queues.",
+    description: "NVM logging simulator in C++ with MESI cache-coherency protocol to minimize persistent writes. Parallelized logging with std::thread and std::atomic reduced latency by 45% and write counts by 50% through lock-free queues.",
     tech: ["C++", "Multithreading", "MESI Protocol", "std::atomic", "std::chrono"],
-    accent: "bg-[#9FE1CB]/10 dark:bg-[#1D9E75]/10 border-[#9FE1CB]/30 dark:border-[#1D9E75]/30",
-    bar: "bg-[#9FE1CB] dark:bg-[#1D9E75]",
     link: "https://github.com/div-dev/LogStream",
   },
   {
+    num: "04",
     title: "HealthBot",
-    description:
-      "ML-powered health chatbot using a TensorFlow/Keras neural network for intent classification. Trained on a custom intent dataset with NLP preprocessing — tokenization, lemmatization, and bag-of-words encoding — to understand and respond to health-related queries.",
+    description: "ML-powered health chatbot using a TensorFlow/Keras neural network for intent classification. Trained on a custom intent dataset with NLP preprocessing — tokenization, lemmatization, and bag-of-words encoding — to understand and respond to health-related queries.",
     tech: ["Python", "TensorFlow", "Keras", "NLP", "scikit-learn", "Jupyter Notebook"],
-    accent: "bg-[#C4B5F4]/10 dark:bg-[#7C6FCD]/10 border-[#C4B5F4]/30 dark:border-[#7C6FCD]/30",
-    bar: "bg-[#C4B5F4] dark:bg-[#7C6FCD]",
     link: "https://github.com/div-dev/HealthBot",
   },
 ];
 
 export default function Projects() {
+  const { funMode } = useFunMode();
+
   return (
-    <section
-      id="projects"
-      className="py-24 bg-white dark:bg-[#2C2C2A] transition-colors duration-200"
-    >
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="projects" className="py-32" style={{ backgroundColor: "var(--surface)" }}>
+      <div className="max-w-3xl mx-auto px-6">
+        {funMode && <div className="fun-ornament">✦ Works of Craft ✦</div>}
+
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-14"
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <p className="text-[13px] font-medium tracking-[0.2em] uppercase text-[#C4B5F4] dark:text-[#7C6FCD] mb-3">
+          <p className="text-[11px] font-medium tracking-[0.25em] uppercase mb-3" style={{ color: "var(--accent)" }}>
             What I&apos;ve Built
           </p>
-          <h2 className="text-[24px] font-medium text-[#2C2C2A] dark:text-[#F1EFE8]">
+          <h2
+            className="text-[24px] font-normal mb-12"
+            style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+          >
             Featured Projects
           </h2>
-        </motion.div>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`group bg-[#FAF9F6] dark:bg-[#1C1C1E] border rounded-xl overflow-hidden hover:border-opacity-60 transition-colors duration-200 flex flex-col ${project.accent}`}
-            >
-              <div className={`h-1 w-full ${project.bar}`} />
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="text-[18px] font-medium text-[#2C2C2A] dark:text-[#F1EFE8] mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-[15px] text-[#888780] dark:text-[#B4B2A9] leading-[1.7] mb-4 flex-1">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {project.tech.map((t) => (
+          <div>
+            {projects.map((project, i) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
+                className="group relative py-8 border-t transition-all duration-300"
+                style={{
+                  borderColor: "var(--border)",
+                  borderLeft: "3px solid transparent",
+                  paddingLeft: 16,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderLeftColor = "var(--accent)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderLeftColor = "transparent";
+                }}
+              >
+                {/* Large faded project number */}
+                <span
+                  className="absolute top-4 right-2 select-none pointer-events-none"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 72,
+                    lineHeight: 1,
+                    color: "var(--text)",
+                    opacity: 0.04,
+                    fontWeight: 400,
+                  }}
+                >
+                  {project.num}
+                </span>
+
+                <div className="relative flex items-start gap-5">
+                  {funMode && (
                     <span
-                      key={t}
-                      className="px-2 py-0.5 bg-white dark:bg-[#2C2C2A] border border-[#D3D1C7] dark:border-[#444441] rounded text-[13px] text-[#888780] dark:text-[#B4B2A9]"
+                      className="text-[13px] font-medium mt-1 shrink-0 w-8 opacity-40"
+                      style={{ fontFamily: "var(--font-display)", color: "var(--accent)" }}
                     >
-                      {t}
+                      {project.num}
                     </span>
-                  ))}
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-4 mb-3">
+                      <h3
+                        className="text-[18px] font-normal"
+                        style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+                      >
+                        {project.title}
+                      </h3>
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13px] font-medium shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200"
+                        style={{ color: "var(--accent)" }}
+                      >
+                        GitHub{" "}
+                        <span
+                          className="inline-block transition-transform duration-200 group-hover:translate-x-1"
+                        >
+                          →
+                        </span>
+                      </a>
+                    </div>
+                    <p className="text-[15px] leading-relaxed mb-4" style={{ color: "var(--text-muted)" }}>
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="text-[11px] px-2 py-0.5 rounded border"
+                          style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                {project.link !== "#" && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[13px] font-medium text-[#C4B5F4] dark:text-[#7C6FCD] hover:underline inline-flex items-center gap-1 transition-colors duration-200"
-                  >
-                    View on GitHub →
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+            <div className="border-t" style={{ borderColor: "var(--border)" }} />
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,115 +1,195 @@
 "use client";
 import { motion } from "framer-motion";
-import { useFunMode } from "../components/FunModeProvider";
+import AnimatedCounter from "../components/AnimatedCounter";
+import ScrollRevealText from "../components/ScrollRevealText";
 
 const stats = [
-  { value: "150+", label: "APIs Built" },
-  { value: "2+", label: "Yrs Exp" },
-  { value: "200+", label: "Airflow DAGs" },
-  { value: "7+", label: "Clients" },
+  { num: 150, suffix: "+", label: "APIs Built" },
+  { num: 2, suffix: "+", label: "Yrs Exp" },
+  { num: 200, suffix: "+", label: "Airflow DAGs" },
+  { num: 7, suffix: "+", label: "Clients" },
 ];
 
 export default function About() {
-  const { funMode } = useFunMode();
-
   return (
     <section
       id="about"
-      className="py-32"
-      style={{ backgroundColor: "var(--bg)" }}
+      style={{ padding: "96px 0", backgroundColor: "var(--bg-primary)" }}
     >
-      <div className="max-w-3xl mx-auto px-6">
-        {funMode && (
-          <div className="fun-ornament">✦ About the Author ✦</div>
-        )}
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
+        {/* Section label */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="grid md:grid-cols-2 gap-14 items-start"
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: "var(--font-code)",
+            fontSize: "11px",
+            letterSpacing: "0.2em",
+            color: "var(--green-400)",
+            marginBottom: "48px",
+          }}
+        >
+          // ABOUT
+        </motion.p>
+
+        <div
+          style={{ display: "grid", gap: "48px" }}
+          className="md:grid-cols-[160px_1fr]"
         >
           {/* Avatar */}
-          <div className="flex justify-center md:justify-start">
-            <div className="relative w-44 h-44 rounded-full">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            style={{ display: "flex", justifyContent: "center" }}
+            className="md:justify-start"
+          >
+            <div style={{ position: "relative", width: "160px", height: "160px" }}>
               <div
-                className="absolute inset-0 rounded-full blur-2xl opacity-40"
-                style={{ backgroundColor: "var(--accent)" }}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(51,255,51,0.15) 0%, transparent 70%)",
+                  filter: "blur(16px)",
+                }}
               />
               <div
-                className="relative w-full h-full rounded-full border flex items-center justify-center"
-                style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  border: "1px solid var(--green-400)",
+                  backgroundColor: "var(--bg-tertiary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 0 20px rgba(51,255,51,0.1)",
+                }}
               >
                 <span
-                  className="text-4xl font-normal"
-                  style={{ fontFamily: "var(--font-display)", color: "var(--accent)" }}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "28px",
+                    fontWeight: 700,
+                    color: "var(--green-400)",
+                    textShadow: "0 0 10px rgba(51,255,51,0.5)",
+                  }}
                 >
                   DC
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Text */}
           <div>
-            <p
-              className="text-[11px] font-medium tracking-[0.25em] uppercase mb-3"
-              style={{ color: "var(--accent)" }}
-            >
-              About Me
-            </p>
-            <h2
-              className="text-[24px] font-normal mb-6 leading-snug"
-              style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
-            >
-              Backend engineer who ships things that actually run in production
-            </h2>
+            {/* Scroll-reveal heading */}
+            <ScrollRevealText
+              text="Backend engineer who ships things that actually run in production."
+              tag="h2"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "clamp(18px, 2.5vw, 22px)",
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                lineHeight: 1.45,
+                marginBottom: "20px",
+              }}
+            />
 
-            {/* Drop cap ONLY in fun mode, ONLY on this paragraph */}
-            <p
-              className={`text-[17px] leading-relaxed mb-4${funMode ? " fun-drop-cap" : ""}`}
-              style={{ color: "var(--text-muted)" }}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 300,
+                fontSize: "16px",
+                lineHeight: 1.75,
+                color: "var(--text-secondary)",
+                marginBottom: "16px",
+              }}
             >
               Senior Python Developer at DesignX, building and scaling backend systems for
               enterprise clients — Hero MotoCorp, Hindustan Unilever, Mondelez, Dabur, and others.
               My work spans Kafka pipelines, Airflow orchestration, IoT data ingestion, and SAP integrations.
-            </p>
-            <p
-              className="text-[17px] leading-relaxed mb-10"
-              style={{ color: "var(--text-muted)" }}
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.18 }}
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 300,
+                fontSize: "16px",
+                lineHeight: 1.75,
+                color: "var(--text-secondary)",
+                marginBottom: "36px",
+              }}
             >
               BTech from Jaypee Institute of Information Technology, Noida. Outside of work I build
               side projects at the intersection of distributed systems and AI.
-            </p>
+            </motion.p>
 
-            {/* Stats — horizontal row with vertical dividers */}
+            {/* Stats with AnimatedCounter */}
             <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-0 mt-2"
-              style={{ borderTop: "1px solid var(--border)", paddingTop: "1.5rem" }}
+              style={{
+                display: "grid",
+                borderTop: "1px solid #1a1a1a",
+                paddingTop: "24px",
+              }}
+              className="grid-cols-2 sm:grid-cols-4"
             >
               {stats.map((stat, i) => (
-                <div
+                <motion.div
                   key={stat.label}
-                  className="flex flex-col items-center py-3 sm:py-0"
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
                   style={{
-                    borderRight: i < stats.length - 1 ? "1px solid var(--border)" : "none",
+                    padding: "16px 8px",
+                    borderRight: i < stats.length - 1 ? "1px solid #1a1a1a" : "none",
+                    textAlign: "center",
                   }}
                 >
                   <div
-                    className="text-[28px] font-normal leading-none mb-1"
-                    style={{ fontFamily: "var(--font-display)", color: "var(--accent)" }}
+                    style={{
+                      fontFamily: "var(--font-code)",
+                      fontSize: "26px",
+                      fontWeight: 700,
+                      color: "var(--green-400)",
+                      lineHeight: 1,
+                      marginBottom: "6px",
+                      textShadow: "0 0 14px rgba(51,255,51,0.3)",
+                    }}
                   >
-                    {stat.value}
+                    <AnimatedCounter target={stat.num} suffix={stat.suffix} />
                   </div>
-                  <div className="text-[11px] uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-code)",
+                      fontSize: "10px",
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: "var(--text-tertiary)",
+                    }}
+                  >
                     {stat.label}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

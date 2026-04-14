@@ -1,43 +1,34 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { Instrument_Serif, UnifrakturMaguntia, EB_Garamond, Space_Mono } from "next/font/google";
-import { ThemeProvider } from "./components/ThemeProvider";
-import { FunModeProvider } from "./components/FunModeProvider";
+import { Space_Mono, JetBrains_Mono, Inter } from "next/font/google";
+import SmoothScroll from "./components/SmoothScroll";
+import ScanlineOverlay from "./components/ScanlineOverlay";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const unifraktur = UnifrakturMaguntia({
-  variable: "--font-blackletter",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const ebGaramond = EB_Garamond({
-  variable: "--font-garamond",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-});
-
 const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "700"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-code",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Divyansh Chawla — Portfolio",
-  description: "Senior Python Developer & Backend Engineer",
+  title: "Divyansh Chawla — Senior Python Developer",
+  description:
+    "Senior Python Developer & Backend Engineer. Kafka pipelines, Airflow orchestration, Python microservices shipped for enterprise clients.",
 };
 
 export default function RootLayout({
@@ -48,15 +39,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${instrumentSerif.variable} ${unifraktur.variable} ${ebGaramond.variable} ${spaceMono.variable} h-full antialiased`}
-      suppressHydrationWarning
+      className={`${spaceMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <ThemeProvider>
-          <FunModeProvider>
-            {children}
-          </FunModeProvider>
-        </ThemeProvider>
+      <body className="bg-[#0a0a0a] text-[#e0e0e0] min-h-screen overflow-x-hidden">
+        <ScanlineOverlay />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

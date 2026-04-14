@@ -1,151 +1,268 @@
 "use client";
-import { motion } from "framer-motion";
-import { useFunMode } from "../components/FunModeProvider";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const projects = [
   {
     num: "01",
     title: "LogIntel",
-    description: "Real-time log ingestion, anomaly detection, and AI-powered analysis pipeline. Kafka-driven architecture with FastAPI services, rule-based anomaly flagging, Claude AI summarization with Redis caching, and a query API for logs and reports.",
+    description:
+      "Real-time log ingestion, anomaly detection, and AI-powered analysis pipeline. Kafka-driven architecture with FastAPI services, rule-based anomaly flagging, Claude AI summarization with Redis caching.",
     tech: ["Python", "FastAPI", "Apache Kafka", "PostgreSQL", "Redis", "Docker", "Anthropic API"],
     link: "https://github.com/div-dev/logIntel",
+    repo: "logIntel",
   },
   {
     num: "02",
     title: "Formbricks Lifecycle Automation",
-    description: "Python CLI tool that spins up and tears down a full Formbricks instance via Docker Compose with a single command. Integrates OpenAI, Claude, and Ollama to generate synthetic surveys, users, and responses — all seeded through the REST API with no direct DB writes.",
+    description:
+      "Python CLI tool that spins up and tears down a full Formbricks instance via Docker Compose. Integrates OpenAI, Claude, and Ollama to generate synthetic surveys, users, and responses.",
     tech: ["Python", "Docker", "OpenAI", "Anthropic", "Ollama", "PostgreSQL", "Redis"],
     link: "https://github.com/div-dev/formbricks_task",
+    repo: "formbricks_task",
   },
   {
     num: "03",
     title: "LogStream",
-    description: "NVM logging simulator in C++ with MESI cache-coherency protocol to minimize persistent writes. Parallelized logging with std::thread and std::atomic reduced latency by 45% and write counts by 50% through lock-free queues.",
+    description:
+      "NVM logging simulator in C++ with MESI cache-coherency protocol to minimize persistent writes. Parallelized logging with std::thread reduced latency by 45%.",
     tech: ["C++", "Multithreading", "MESI Protocol", "std::atomic", "std::chrono"],
     link: "https://github.com/div-dev/LogStream",
+    repo: "LogStream",
   },
   {
     num: "04",
     title: "HealthBot",
-    description: "ML-powered health chatbot using a TensorFlow/Keras neural network for intent classification. Trained on a custom intent dataset with NLP preprocessing — tokenization, lemmatization, and bag-of-words encoding — to understand and respond to health-related queries.",
-    tech: ["Python", "TensorFlow", "Keras", "NLP", "scikit-learn", "Jupyter Notebook"],
+    description:
+      "ML-powered health chatbot using TensorFlow/Keras neural network for intent classification. Custom NLP preprocessing with tokenization, lemmatization, and bag-of-words encoding.",
+    tech: ["Python", "TensorFlow", "Keras", "NLP", "scikit-learn"],
     link: "https://github.com/div-dev/HealthBot",
+    repo: "HealthBot",
   },
 ];
 
-export default function Projects() {
-  const { funMode } = useFunMode();
+function ProjectCard({
+  project,
+  index,
+}: {
+  project: (typeof projects)[0];
+  index: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: y * 5, y: x * -5 });
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    setTilt({ x: 0, y: 0 });
+  };
 
   return (
-    <section id="projects" className="py-32" style={{ backgroundColor: "var(--surface)" }}>
-      <div className="max-w-3xl mx-auto px-6">
-        {funMode && <div className="fun-ornament">✦ Works of Craft ✦</div>}
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      animate={{
+        rotateX: tilt.x,
+        rotateY: tilt.y,
+        borderLeftColor: hovered ? "var(--green-400)" : "transparent",
+        boxShadow: hovered ? "0 0 40px rgba(51,255,51,0.05)" : "none",
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        opacity: { duration: 0.5, ease: "easeOut", delay: index * 0.08 },
+        y: { duration: 0.5, ease: "easeOut", delay: index * 0.08 },
+        rotateX: { type: "spring", stiffness: 300, damping: 25 },
+        rotateY: { type: "spring", stiffness: 300, damping: 25 },
+        borderLeftColor: { duration: 0.2 },
+        boxShadow: { duration: 0.2 },
+      }}
+      style={{
+        backgroundColor: "var(--bg-tertiary)",
+        borderLeft: "2px solid transparent",
+        borderTop: "1px solid #1a1a1a",
+        borderRight: "1px solid #1a1a1a",
+        borderBottom: "1px solid #1a1a1a",
+        padding: "32px 28px",
+        position: "relative",
+        cursor: "default",
+        perspective: "800px",
+        transformStyle: "preserve-3d",
+      }}
+    >
+      {/* Noise texture */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0.025,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
+          backgroundRepeat: "repeat",
+          backgroundSize: "200px 200px",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+      {/* Large faded number */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "16px",
+          right: "20px",
+          fontFamily: "var(--font-code)",
+          fontSize: "72px",
+          lineHeight: 1,
+          color: "var(--text-primary)",
+          opacity: 0.04,
+          userSelect: "none",
+          pointerEvents: "none",
+          fontWeight: 700,
+          zIndex: 0,
+        }}
+      >
+        {project.num}
+      </span>
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Title + hover link */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: "16px",
+            marginBottom: "14px",
+          }}
         >
-          <p className="text-[11px] font-medium tracking-[0.25em] uppercase mb-3" style={{ color: "var(--accent)" }}>
-            What I&apos;ve Built
-          </p>
-          <h2
-            className="text-[24px] font-normal mb-12"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+          <h3
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "18px",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              margin: 0,
+              lineHeight: 1.3,
+            }}
           >
-            Featured Projects
-          </h2>
-
-          <div>
-            {projects.map((project, i) => (
-              <motion.div
-                key={project.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
-                className="group relative py-8 border-t transition-all duration-300"
+            {project.title}
+          </h3>
+          <AnimatePresence>
+            {hovered && (
+              <motion.a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -6 }}
+                transition={{ duration: 0.18 }}
                 style={{
-                  borderColor: "var(--border)",
-                  borderLeft: "3px solid transparent",
-                  paddingLeft: 16,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderLeftColor = "var(--accent)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderLeftColor = "transparent";
+                  fontFamily: "var(--font-code)",
+                  fontSize: "11px",
+                  color: "var(--green-400)",
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  letterSpacing: "0.04em",
+                  marginTop: "4px",
                 }}
               >
-                {/* Large faded project number */}
-                <span
-                  className="absolute top-4 right-2 select-none pointer-events-none"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 72,
-                    lineHeight: 1,
-                    color: "var(--text)",
-                    opacity: 0.04,
-                    fontWeight: 400,
-                  }}
-                >
-                  {project.num}
-                </span>
+                ↗ github
+              </motion.a>
+            )}
+          </AnimatePresence>
+        </div>
 
-                <div className="relative flex items-start gap-5">
-                  {funMode && (
-                    <span
-                      className="text-[13px] font-medium mt-1 shrink-0 w-8 opacity-40"
-                      style={{ fontFamily: "var(--font-display)", color: "var(--accent)" }}
-                    >
-                      {project.num}
-                    </span>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-4 mb-3">
-                      <h3
-                        className="text-[18px] font-normal"
-                        style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
-                      >
-                        {project.title}
-                      </h3>
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[13px] font-medium shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200"
-                        style={{ color: "var(--accent)" }}
-                      >
-                        GitHub{" "}
-                        <span
-                          className="inline-block transition-transform duration-200 group-hover:translate-x-1"
-                        >
-                          →
-                        </span>
-                      </a>
-                    </div>
-                    <p className="text-[15px] leading-relaxed mb-4" style={{ color: "var(--text-muted)" }}>
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="text-[11px] px-2 py-0.5 rounded border"
-                          style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-            <div className="border-t" style={{ borderColor: "var(--border)" }} />
-          </div>
-        </motion.div>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontWeight: 300,
+            fontSize: "15px",
+            lineHeight: 1.7,
+            color: "var(--text-secondary)",
+            marginBottom: "20px",
+          }}
+        >
+          {project.description}
+        </p>
+
+        {/* Tech pills */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+          {project.tech.map((t) => (
+            <span
+              key={t}
+              style={{
+                fontFamily: "var(--font-code)",
+                fontSize: "11px",
+                color: "var(--text-secondary)",
+                border: `1px solid ${hovered ? "var(--border-green-bright)" : "var(--border-green)"}`,
+                padding: "3px 8px",
+                transition: "border-color 0.2s",
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function Projects() {
+  return (
+    <section
+      id="projects"
+      style={{ padding: "96px 0", backgroundColor: "var(--bg-secondary)" }}
+    >
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: "var(--font-code)",
+            fontSize: "11px",
+            letterSpacing: "0.2em",
+            color: "var(--green-400)",
+            marginBottom: "48px",
+          }}
+        >
+          // PROJECTS
+        </motion.p>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(1, 1fr)",
+            gap: "24px",
+          }}
+          className="md:grid-cols-2"
+        >
+          {projects.map((project, i) => (
+            <ProjectCard key={project.title} project={project} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { useFunMode } from "../components/FunModeProvider";
 
 const experience = [
   {
@@ -8,7 +7,7 @@ const experience = [
     company: "DesignX",
     period: "Nov 2025 – Present",
     bullets: [
-      "Led backend engineering for enterprise automation platforms — Python microservices and REST APIs in production at Hero MotoCorp.",
+      "Led backend engineering for enterprise automation — Python microservices and REST APIs in production at Hero MotoCorp.",
       "Architected Dockerized Kafka Connect pipelines synchronizing 400+ enterprise tables across MySQL and internal systems.",
       "Own 200+ Apache Airflow DAGs powering ETL and workflow orchestration, with automated alerting and production scheduling.",
       "Built IoT data pipelines processing 500+ machine telemetry events/hour and integrated SAP ECC for real-time bidirectional data exchange.",
@@ -30,86 +29,202 @@ const experience = [
 ];
 
 export default function Experience() {
-  const { funMode } = useFunMode();
-
   return (
-    <section id="experience" className="py-32" style={{ backgroundColor: "var(--bg)" }}>
-      <div className="max-w-3xl mx-auto px-6">
-        {funMode && <div className="fun-ornament">✦ Chronicles of Work ✦</div>}
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+    <section
+      id="experience"
+      style={{ padding: "96px 0", backgroundColor: "var(--bg-primary)" }}
+    >
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
+        {/* Section label */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.5 }}
+          style={{
+            fontFamily: "var(--font-code)",
+            fontSize: "11px",
+            letterSpacing: "0.2em",
+            color: "var(--green-400)",
+            marginBottom: "48px",
+          }}
         >
-          <p className="text-[11px] font-medium tracking-[0.25em] uppercase mb-3" style={{ color: "var(--accent)" }}>
-            My Journey
-          </p>
-          <h2
-            className="text-[24px] font-normal mb-12"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
-          >
-            Work Experience
-          </h2>
+          // EXPERIENCE
+        </motion.p>
 
-          <div className="space-y-10">
+        {/* Timeline */}
+        <div style={{ position: "relative" }}>
+          {/* Vertical line */}
+          <motion.div
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            style={{
+              position: "absolute",
+              left: "0",
+              top: "8px",
+              bottom: "8px",
+              width: "1px",
+              backgroundColor: "rgba(51,255,51,0.15)",
+              transformOrigin: "top",
+            }}
+          />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "64px" }}>
             {experience.map((job, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
-                className="pl-5"
-                style={{ borderLeft: `2px solid var(--accent)` }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
+                style={{ paddingLeft: "28px", position: "relative" }}
               >
-                <div className="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+                {/* Timeline dot */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "-4px",
+                    top: "4px",
+                    width: "9px",
+                    height: "9px",
+                    borderRadius: "50%",
+                    backgroundColor: "var(--green-400)",
+                    boxShadow: "0 0 8px rgba(51,255,51,0.5)",
+                    flexShrink: 0,
+                  }}
+                />
+
+                {/* Terminal header */}
+                <div
+                  style={{
+                    fontFamily: "var(--font-code)",
+                    fontSize: "11px",
+                    color: "var(--text-tertiary)",
+                    marginBottom: "12px",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  <span style={{ color: "var(--green-400)" }}>$ </span>
+                  <span style={{ color: "var(--text-secondary)" }}>history </span>
+                  <span style={{ color: "var(--amber-400)" }}>--role</span>
+                  <span style={{ color: "var(--text-primary)" }}>
+                    {" "}&quot;{job.role}&quot;
+                  </span>
+                  <span style={{ color: "var(--amber-400)" }}> --company</span>
+                  <span style={{ color: "var(--text-primary)" }}>
+                    {" "}&quot;{job.company}&quot;
+                  </span>
+                  <span style={{ color: "var(--amber-400)" }}> --period</span>
+                  <span style={{ color: "var(--text-primary)" }}>
+                    {" "}&quot;{job.period}&quot;
+                  </span>
+                </div>
+
+                {/* Role + company */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "baseline",
+                    gap: "8px",
+                    marginBottom: "16px",
+                  }}
+                >
                   <h3
-                    className="text-[18px] font-normal"
-                    style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                      margin: 0,
+                    }}
                   >
                     {job.role}
-                    <span className="ml-2 text-[15px]" style={{ color: "var(--text-muted)" }}>
-                      · {job.company}
-                    </span>
                   </h3>
                   <span
-                    className="text-[12px] px-2.5 py-0.5 rounded-full border"
-                    style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}
+                    style={{
+                      fontFamily: "var(--font-code)",
+                      fontSize: "13px",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    · {job.company}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-code)",
+                      fontSize: "11px",
+                      color: "var(--text-tertiary)",
+                      border: "1px solid #1a1a1a",
+                      padding: "2px 8px",
+                      marginLeft: "auto",
+                    }}
                   >
                     {job.period}
                   </span>
                 </div>
 
-                <ul className="mt-4 space-y-2 mb-5">
-                  {job.bullets.map((b, bi) => (
-                    <li
+                {/* Bullets */}
+                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {job.bullets.map((bullet, bi) => (
+                    <motion.li
                       key={bi}
-                      className="text-[15px] leading-relaxed flex gap-2"
-                      style={{ color: "var(--text-muted)" }}
+                      initial={{ opacity: 0, x: -8 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.1 + bi * 0.07 }}
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        fontFamily: "var(--font-sans)",
+                        fontWeight: 300,
+                        fontSize: "15px",
+                        lineHeight: 1.65,
+                        color: "var(--text-secondary)",
+                      }}
                     >
-                      <span style={{ color: "var(--accent)", flexShrink: 0, marginTop: "0.3rem", fontSize: "13px" }}>→</span>
-                      {b}
-                    </li>
+                      <span
+                        style={{
+                          color: "var(--green-400)",
+                          flexShrink: 0,
+                          marginTop: "0.25em",
+                          fontSize: "12px",
+                        }}
+                      >
+                        →
+                      </span>
+                      {bullet}
+                    </motion.li>
                   ))}
                 </ul>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {job.tech.map((t) => (
-                    <span
+                {/* Tech tags */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {job.tech.map((t, ti) => (
+                    <motion.span
                       key={t}
-                      className="text-[11px] px-2 py-0.5 rounded border"
-                      style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.3, delay: 0.3 + ti * 0.05 }}
+                      style={{
+                        fontFamily: "var(--font-code)",
+                        fontSize: "11px",
+                        color: "var(--text-secondary)",
+                        border: "1px solid var(--border-green)",
+                        padding: "3px 8px",
+                      }}
                     >
                       {t}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

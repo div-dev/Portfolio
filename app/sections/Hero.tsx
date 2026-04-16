@@ -19,7 +19,7 @@ export default function Hero() {
     <div id="hero">
       <HeroFuturistic
         title="DIVYANSH CHAWLA"
-        subtitle="Senior Python Developer & Backend Engineer."
+        subtitle="I write code that runs in production. Backend mostly. Not only."
       />
     </div>
   );

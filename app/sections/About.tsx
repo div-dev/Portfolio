@@ -4,10 +4,10 @@ import AnimatedCounter from "../components/AnimatedCounter";
 import ScrollRevealText from "../components/ScrollRevealText";
 
 const stats = [
-  { num: 150, suffix: "+", label: "APIs Built" },
-  { num: 2, suffix: "+", label: "Yrs Exp" },
-  { num: 200, suffix: "+", label: "Airflow DAGs" },
-  { num: 7, suffix: "+", label: "Clients" },
+  { num: 400, suffix: "+", label: "Enterprise Tables Synced" },
+  { num: 200, suffix: "+", label: "Airflow DAGs Owned" },
+  { num: 150, suffix: "+", label: "REST APIs Shipped" },
+  { num: 7, suffix: "+", label: "Enterprise Clients" },
 ];
 
 export default function About() {
@@ -90,7 +90,7 @@ export default function About() {
           <div>
             {/* Scroll-reveal heading */}
             <ScrollRevealText
-              text="Backend engineer who ships things that actually run in production."
+              text="Backend is the day job. The rest is whatever I'm curious about this month."
               tag="h2"
               style={{
                 fontFamily: "var(--font-mono)",
@@ -116,9 +116,9 @@ export default function About() {
                 marginBottom: "16px",
               }}
             >
-              Senior Python Developer at DesignX, building and scaling backend systems for
-              enterprise clients — Hero MotoCorp, Hindustan Unilever, Mondelez, Dabur, and others.
-              My work spans Kafka pipelines, Airflow orchestration, IoT data ingestion, and SAP integrations.
+              Senior Python Developer at DesignX. I build and maintain production backend systems
+              for large manufacturers: Kafka pipelines, 200+ Airflow DAGs, IoT telemetry ingestion,
+              SAP ECC integration. The clients include Hero MotoCorp, Hindustan Unilever, Mondelez, Dabur, and others.
             </motion.p>
 
             <motion.p
@@ -135,8 +135,8 @@ export default function About() {
                 marginBottom: "36px",
               }}
             >
-              BTech from Jaypee Institute of Information Technology, Noida. Outside of work I build
-              side projects at the intersection of distributed systems and AI.
+              BTech from Jaypee Institute of Information Technology, Noida. Side projects go wherever
+              curiosity takes me: C++ cache simulators, TensorFlow classifiers, LLM automation tooling.
             </motion.p>
 
             {/* Stats with AnimatedCounter */}

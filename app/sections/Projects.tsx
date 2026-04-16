@@ -7,8 +7,8 @@ const projects = [
     num: "01",
     title: "LogIntel",
     description:
-      "Real-time log ingestion, anomaly detection, and AI-powered analysis pipeline. Kafka-driven architecture with FastAPI services, rule-based anomaly flagging, Claude AI summarization with Redis caching.",
-    tech: ["Python", "FastAPI", "Apache Kafka", "PostgreSQL", "Redis", "Docker", "Anthropic API"],
+      "Real-time log ingestion, anomaly detection, and LLM-powered analysis. Built to understand how Kafka, FastAPI, and a Claude summarizer actually wire together end-to-end.",
+    tech: ["Data Engineering", "Python", "FastAPI", "Apache Kafka", "PostgreSQL", "Redis", "Docker"],
     link: "https://github.com/div-dev/logIntel",
     repo: "logIntel",
   },
@@ -16,8 +16,8 @@ const projects = [
     num: "02",
     title: "Formbricks Lifecycle Automation",
     description:
-      "Python CLI tool that spins up and tears down a full Formbricks instance via Docker Compose. Integrates OpenAI, Claude, and Ollama to generate synthetic surveys, users, and responses.",
-    tech: ["Python", "Docker", "OpenAI", "Anthropic", "Ollama", "PostgreSQL", "Redis"],
+      "Python CLI that spins up a full Formbricks stack via Docker Compose, then uses LLMs to generate synthetic surveys, users, and responses. Built to see how far LLM-generated data could go in automating QA workflows.",
+    tech: ["LLM Tooling", "Python", "Docker", "OpenAI", "Anthropic", "Ollama", "PostgreSQL"],
     link: "https://github.com/div-dev/formbricks_task",
     repo: "formbricks_task",
   },
@@ -25,8 +25,8 @@ const projects = [
     num: "03",
     title: "LogStream",
     description:
-      "NVM logging simulator in C++ with MESI cache-coherency protocol to minimize persistent writes. Parallelized logging with std::thread reduced latency by 45%.",
-    tech: ["C++", "Multithreading", "MESI Protocol", "std::atomic", "std::chrono"],
+      "NVM logging simulator in C++ using MESI cache-coherency to minimize persistent writes. Parallelized with std::thread for 45% latency reduction. Built to understand cache coherency from first principles, not just from a textbook.",
+    tech: ["Systems Programming", "C++", "Multithreading", "MESI Protocol", "std::atomic"],
     link: "https://github.com/div-dev/LogStream",
     repo: "LogStream",
   },
@@ -34,8 +34,8 @@ const projects = [
     num: "04",
     title: "HealthBot",
     description:
-      "ML-powered health chatbot using TensorFlow/Keras neural network for intent classification. Custom NLP preprocessing with tokenization, lemmatization, and bag-of-words encoding.",
-    tech: ["Python", "TensorFlow", "Keras", "NLP", "scikit-learn"],
+      "Intent classification chatbot trained with TensorFlow/Keras. Custom NLP pipeline: tokenization, lemmatization, bag-of-words encoding. Final-year project built to go past sklearn tutorials and train something from scratch.",
+    tech: ["ML Engineering", "Python", "TensorFlow", "Keras", "NLP", "scikit-learn"],
     link: "https://github.com/div-dev/HealthBot",
     repo: "HealthBot",
   },
@@ -78,7 +78,7 @@ function ProjectCard({
       animate={{
         rotateX: tilt.x,
         rotateY: tilt.y,
-        borderLeftColor: hovered ? "var(--green-400)" : "transparent",
+        borderLeftColor: hovered ? "var(--green-400)" : "rgba(0,0,0,0)",
         boxShadow: hovered ? "0 0 40px rgba(51,255,51,0.05)" : "none",
         opacity: 1,
         y: 0,

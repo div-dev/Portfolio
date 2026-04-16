@@ -120,40 +120,38 @@ export default function Contact() {
           // CONTACT
         </motion.p>
 
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
           style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "clamp(24px, 5vw, 38px)",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            marginBottom: "16px",
-          }}
-        >
-          Let&apos;s Work Together
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontWeight: 300,
+            fontFamily: "var(--font-code)",
             fontSize: "16px",
-            color: "var(--text-secondary)",
-            maxWidth: "420px",
+            textAlign: "left",
+            maxWidth: "480px",
             margin: "0 auto 48px",
-            lineHeight: 1.7,
+            lineHeight: 1.9,
           }}
         >
-          Open to new opportunities. Whether you have a project in mind or just
-          want to say hello — my inbox is always open.
-        </motion.p>
+          {/* Command */}
+          <div style={{ marginBottom: "12px" }}>
+            <span style={{ color: "var(--green-400)" }}>$ </span>
+            <span style={{ color: "var(--text-secondary)" }}>whoami </span>
+            <span style={{ color: "var(--amber-400)" }}>--hiring</span>
+          </div>
+          {/* Output */}
+          {[
+            "open to backend, data engineering, fullstack, and ML roles.",
+            "production work across all of them, not just the first one.",
+            "Delhi NCR. Comfortable remote. Will relocate for the right thing.",
+          ].map((line, i) => (
+            <div key={i} style={{ display: "flex", gap: "10px" }}>
+              <span style={{ color: "var(--green-400)", flexShrink: 0 }}>{">"}</span>
+              <span style={{ color: "var(--text-secondary)" }}>{line}</span>
+            </div>
+          ))}
+        </motion.div>
 
         {/* Typed email */}
         <motion.div

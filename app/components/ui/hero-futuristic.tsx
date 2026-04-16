@@ -43,7 +43,7 @@ const PostProcessing = ({
   const progressRef = useRef({ value: 0 });
 
   const render = useMemo(() => {
-    const postProcessing = new (THREE as any).PostProcessing(gl as any);
+    const postProcessing = new (THREE as any).RenderPipeline(gl as any);
     const scenePass = pass(scene, camera);
     const scenePassColor = scenePass.getTextureNode('output');
     const bloomPass = bloom(scenePassColor, strength, 0.5, threshold);
@@ -72,7 +72,7 @@ const PostProcessing = ({
 
   useFrame(({ clock }) => {
     progressRef.current.value = (Math.sin(clock.getElapsedTime() * 0.5) * 0.5 + 0.5);
-    render.renderAsync();
+    render.render();
   }, 1);
 
   return null;

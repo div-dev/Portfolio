@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Mono, JetBrains_Mono, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "./components/SmoothScroll";
 import ScanlineOverlay from "./components/ScanlineOverlay";
 import "./globals.css";
@@ -26,7 +28,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Divyansh Chawla — Senior Python Developer",
+  title: "Divyansh Chawla | Senior Python Developer",
   description:
     "Senior Python Developer & Backend Engineer. Kafka pipelines, Airflow orchestration, Python microservices shipped for enterprise clients.",
 };
@@ -46,6 +48,8 @@ export default function RootLayout({
         <SmoothScroll>
           {children}
         </SmoothScroll>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,194 +1,208 @@
 "use client";
-import { motion } from "framer-motion";
-import AnimatedCounter from "../components/AnimatedCounter";
-import ScrollRevealText from "../components/ScrollRevealText";
+import { useEffect, useRef, useState } from "react";
 
-const stats = [
-  { num: 400, suffix: "+", label: "Enterprise Tables Synced" },
-  { num: 200, suffix: "+", label: "Airflow DAGs Owned" },
-  { num: 150, suffix: "+", label: "REST APIs Shipped" },
-  { num: 7, suffix: "+", label: "Enterprise Clients" },
+const ROLES = ["AI Product Engineer", "Full Stack Builder", "Automation Architect", "Creative Technologist"];
+
+const STATS = [
+  { v: 400, s: "+", l: "Enterprise Tables Synced" },
+  { v: 200, s: "+", l: "Airflow DAGs Owned" },
+  { v: 150, s: "+", l: "REST APIs Shipped" },
+  { v: 7,   s: "+", l: "Enterprise Clients" },
 ];
 
+function Counter({ target, suffix, active }: { target: number; suffix: string; active: boolean }) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    let start: number | null = null;
+    const dur = 1800;
+    let raf = 0;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 4);
+      setVal(Math.round(e * target));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [active, target]);
+  return <>{val}{suffix}</>;
+}
+
 export default function About() {
+  const ref = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setFade(false);
+      setTimeout(() => { setRoleIdx((i) => (i + 1) % ROLES.length); setFade(true); }, 350);
+    }, 2800);
+    return () => clearInterval(t);
+  }, []);
+
+  const go = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (window.__lenis) window.__lenis.scrollTo(el, { offset: -72, duration: 1.2 });
+    else el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section
       id="about"
-      style={{ padding: "96px 0", backgroundColor: "var(--bg-primary)" }}
+      ref={ref}
+      style={{
+        padding: "clamp(80px,12vw,160px) clamp(20px,5vw,120px)",
+        background: "linear-gradient(180deg, #080808 0%, #0c0c0c 100%)",
+        borderTop: "1px solid rgba(51,255,51,0.1)",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
-        {/* Section label */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "11px",
-            letterSpacing: "0.2em",
-            color: "var(--green-400)",
-            marginBottom: "48px",
-          }}
-        >
-          // ABOUT
-        </motion.p>
+      <div className="ghost-num">01</div>
+
+      <div style={{ position: "relative", zIndex: 2, maxWidth: 860 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.35em", color: "var(--green-400)", opacity: 0.65, marginBottom: 48, textTransform: "uppercase" }}>
+          § 01 · IDENTITY
+        </div>
 
         <div
-          style={{ display: "grid", gap: "48px" }}
-          className="md:grid-cols-[160px_1fr]"
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "clamp(13px,1.4vw,17px)",
+            color: "var(--green-400)",
+            marginBottom: 20,
+            opacity: inView ? 1 : 0,
+            transform: inView ? "none" : "translateY(16px)",
+            transition: "all 0.8s",
+          }}
         >
-          {/* Avatar */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            style={{ display: "flex", justifyContent: "center" }}
-            className="md:justify-start"
+          {">"} role.current ={" "}
+          <span style={{ color: "var(--amber-400)", opacity: fade ? 1 : 0, transition: "opacity 0.3s" }}>
+            {ROLES[roleIdx]}
+          </span>
+        </div>
+
+        <h2
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "clamp(30px,5vw,72px)",
+            fontWeight: 700,
+            lineHeight: 1.05,
+            color: "#dff0df",
+            margin: "0 0 28px",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "none" : "translateY(24px)",
+            transition: "all 0.9s 0.1s",
+          }}
+        >
+          Building systems that{" "}
+          <span style={{ color: "var(--green-400)" }}>think, scale,</span>
+          <br />
+          <span style={{ color: "var(--green-400)" }}>and perform.</span>
+        </h2>
+
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(14px,1.2vw,17px)",
+            lineHeight: 1.85,
+            color: "rgba(200,240,200,0.5)",
+            maxWidth: 580,
+            margin: "0 0 44px",
+            opacity: inView ? 1 : 0,
+            transition: "all 1s 0.2s",
+            fontWeight: 300,
+          }}
+        >
+          Senior Python Developer at DesignX (via Hero MotoCorp, HUL, Mondelez, Dabur), building Kafka pipelines, Airflow DAGs, IoT telemetry, and SAP ECC integrations that ship. BTech, JIIT Noida. Open to product-engineering and AI-integration roles.
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            opacity: inView ? 1 : 0,
+            transition: "all 1s 0.3s",
+            marginBottom: 64,
+          }}
+        >
+          <button
+            onClick={() => go("projects")}
+            style={{
+              fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em",
+              background: "var(--green-400)", color: "#000", border: "none", padding: "13px 28px",
+              cursor: "pointer", transition: "background 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#fff")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "var(--green-400)")}
           >
-            <div style={{ position: "relative", width: "160px", height: "160px" }}>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(51,255,51,0.15) 0%, transparent 70%)",
-                  filter: "blur(16px)",
-                }}
-              />
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  border: "1px solid var(--green-400)",
-                  backgroundColor: "var(--bg-tertiary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 0 20px rgba(51,255,51,0.1)",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "28px",
-                    fontWeight: 700,
-                    color: "var(--green-400)",
-                    textShadow: "0 0 10px rgba(51,255,51,0.5)",
-                  }}
-                >
-                  DC
-                </span>
+            EXPLORE WORK →
+          </button>
+          <button
+            onClick={() => go("contact")}
+            style={{
+              fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em",
+              background: "transparent", color: "var(--amber-400)", border: "1px solid rgba(255,170,0,0.4)", padding: "13px 28px",
+              cursor: "pointer", transition: "background 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,170,0,0.07)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          >
+            HIRE ME
+          </button>
+        </div>
+
+        {/* Stats grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 20 }}>
+          {STATS.map((s, i) => (
+            <div
+              key={s.l}
+              style={{
+                padding: "clamp(22px,3vw,36px)",
+                border: "1px solid rgba(51,255,51,0.12)",
+                position: "relative",
+                background: "rgba(51,255,51,0.015)",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "none" : "translateY(16px)",
+                transition: `all 0.7s ${i * 0.1}s`,
+              }}
+            >
+              {([
+                { top: -1, left: -1, borderWidth: "1px 0 0 1px" },
+                { top: -1, right: -1, borderWidth: "1px 1px 0 0" },
+                { bottom: -1, left: -1, borderWidth: "0 0 1px 1px" },
+                { bottom: -1, right: -1, borderWidth: "0 1px 1px 0" },
+              ] as const).map((pos, k) => (
+                <div
+                  key={k}
+                  aria-hidden
+                  style={{ position: "absolute", width: 12, height: 12, borderStyle: "solid", borderColor: "var(--green-400)", ...pos }}
+                />
+              ))}
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(36px,5vw,60px)", fontWeight: 700, color: "var(--amber-400)", lineHeight: 1 }}>
+                <Counter target={s.v} suffix={s.s} active={inView} />
+              </div>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "rgba(200,240,200,0.45)", marginTop: 10 }}>
+                {s.l}
               </div>
             </div>
-          </motion.div>
-
-          {/* Text */}
-          <div>
-            {/* Scroll-reveal heading */}
-            <ScrollRevealText
-              text="Backend is the day job. The rest is whatever I'm curious about this month."
-              tag="h2"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "clamp(18px, 2.5vw, 22px)",
-                fontWeight: 700,
-                color: "var(--text-primary)",
-                lineHeight: 1.45,
-                marginBottom: "20px",
-              }}
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontWeight: 300,
-                fontSize: "16px",
-                lineHeight: 1.75,
-                color: "var(--text-secondary)",
-                marginBottom: "16px",
-              }}
-            >
-              Senior Python Developer at DesignX. I build and maintain production backend systems
-              for large manufacturers: Kafka pipelines, 200+ Airflow DAGs, IoT telemetry ingestion,
-              SAP ECC integration. The clients include Hero MotoCorp, Hindustan Unilever, Mondelez, Dabur, and others.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.18 }}
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontWeight: 300,
-                fontSize: "16px",
-                lineHeight: 1.75,
-                color: "var(--text-secondary)",
-                marginBottom: "36px",
-              }}
-            >
-              BTech from Jaypee Institute of Information Technology, Noida. Side projects go wherever
-              curiosity takes me: C++ cache simulators, TensorFlow classifiers, LLM automation tooling.
-            </motion.p>
-
-            {/* Stats with AnimatedCounter */}
-            <div
-              style={{
-                display: "grid",
-                borderTop: "1px solid #1a1a1a",
-                paddingTop: "24px",
-              }}
-              className="grid-cols-2 sm:grid-cols-4"
-            >
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
-                  style={{
-                    padding: "16px 8px",
-                    borderRight: i < stats.length - 1 ? "1px solid #1a1a1a" : "none",
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "var(--font-code)",
-                      fontSize: "26px",
-                      fontWeight: 700,
-                      color: "var(--green-400)",
-                      lineHeight: 1,
-                      marginBottom: "6px",
-                      textShadow: "0 0 14px rgba(51,255,51,0.3)",
-                    }}
-                  >
-                    <AnimatedCounter target={stat.num} suffix={stat.suffix} />
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-code)",
-                      fontSize: "10px",
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
-                      color: "var(--text-tertiary)",
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

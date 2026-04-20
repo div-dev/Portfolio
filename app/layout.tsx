@@ -4,6 +4,9 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SmoothScroll from "./components/SmoothScroll";
 import ScanlineOverlay from "./components/ScanlineOverlay";
+import Cursor from "./components/Cursor";
+import ScrollProgress from "./components/ScrollProgress";
+import ChapterHUD from "./components/ChapterHUD";
 import "./globals.css";
 
 const spaceMono = Space_Mono({
@@ -43,7 +46,13 @@ export default function RootLayout({
       lang="en"
       className={`${spaceMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
     >
-      <body className="bg-[#0a0a0a] text-[#e0e0e0] min-h-screen overflow-x-hidden">
+      <body
+        className="bg-[#0a0a0a] text-[#e0e0e0] min-h-screen overflow-x-hidden"
+        style={{ cursor: "none" }}
+      >
+        <ScrollProgress />
+        <ChapterHUD />
+        <Cursor />
         <ScanlineOverlay />
         <SmoothScroll>
           {children}

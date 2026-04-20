@@ -1,239 +1,194 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import MagneticButton from "../components/MagneticButton";
 
 const EMAIL = "divyanshchawla12@gmail.com";
-const EMAIL_CMD = `$ mail ${EMAIL}`;
+const LINKEDIN = "https://linkedin.com/in/divyansh-chawla-751b1a230";
+const GITHUB = "https://github.com/div-dev";
+const RESUME = "/resume.pdf";
 
-const socials = [
-  { label: "GitHub", href: "https://github.com/div-dev", external: true },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/divyansh-chawla-751b1a230/", external: true },
-  { label: "Resume", href: "/resume.pdf", external: false },
+const TERM_LINES = [
+  { p: "$", t: " INITIALIZING CONTACT PROTOCOL...", d: 0 },
+  { p: ">", t: " NAME: DIVYANSH CHAWLA", d: 500 },
+  { p: ">", t: " STATUS: AVAILABLE FOR HIRE", d: 950 },
+  { p: ">", t: " LOCATION: 28.71°N 77.10°E — NEW DELHI", d: 1400 },
+  { p: ">", t: " FOCUS: Python / AI Integration / Full Stack", d: 1850 },
+  { p: ">", t: " RESPONSE: < 24 hours", d: 2300 },
+  { p: "✓", t: " CHANNEL OPEN — AWAITING INPUT_", d: 2750 },
 ];
 
-function TypedEmail() {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
+function Terminal({ active }: { active: boolean }) {
+  const [lines, setLines] = useState<typeof TERM_LINES>([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          let i = 0;
-          const interval = setInterval(() => {
-            i++;
-            setDisplayed(EMAIL_CMD.slice(0, i));
-            if (i >= EMAIL_CMD.length) {
-              clearInterval(interval);
-              setDone(true);
-            }
-          }, 40);
-        }
-      },
-      { threshold: 0.5 }
+    if (!active) return;
+    TERM_LINES.forEach((line) =>
+      setTimeout(() => setLines((prev) => [...prev, line]), line.d)
     );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  }, [active]);
 
   return (
-    <div ref={ref}>
-      <a
-        href={`mailto:${EMAIL}`}
-        style={{
-          fontFamily: "var(--font-code)",
-          fontSize: "clamp(13px, 2.2vw, 18px)",
-          color: "var(--green-400)",
-          textDecoration: "none",
-          textShadow: "0 0 10px rgba(51,255,51,0.3)",
-          transition: "text-shadow 0.2s",
-        }}
-        onMouseEnter={(e) =>
-          ((e.currentTarget as HTMLAnchorElement).style.textShadow =
-            "0 0 20px rgba(51,255,51,0.6)")
-        }
-        onMouseLeave={(e) =>
-          ((e.currentTarget as HTMLAnchorElement).style.textShadow =
-            "0 0 10px rgba(51,255,51,0.3)")
-        }
-      >
-        {displayed}
-        <span
-          style={{
-            display: "inline-block",
-            width: "0.5em",
-            height: "1.1em",
-            backgroundColor: "var(--green-400)",
-            marginLeft: "2px",
-            verticalAlign: "text-bottom",
-            animation: done ? "blink 1s step-end infinite" : "none",
-          }}
-        />
-      </a>
+    <div style={{ maxWidth: 600, marginBottom: 44, background: "#020502", border: "1px solid rgba(51,255,51,0.18)", opacity: active ? 1 : 0, transition: "all 0.8s 0.25s" }}>
+      <div style={{ display: "flex", gap: 7, padding: "11px 16px", borderBottom: "1px solid rgba(51,255,51,0.08)", alignItems: "center" }}>
+        <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57" }} />
+        <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#febc2e" }} />
+        <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840" }} />
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(51,255,51,0.35)", marginLeft: "auto", letterSpacing: "0.1em" }}>contact.sh</span>
+      </div>
+      <div style={{ padding: "18px 22px", minHeight: 210 }}>
+        {lines.map((line, i) => (
+          <div key={i} style={{ fontFamily: "var(--font-mono)", fontSize: 12, lineHeight: 1.85, marginBottom: 2 }}>
+            <span style={{ color: line.p === "$" ? "var(--amber-400)" : line.p === "✓" ? "#28c840" : "rgba(51,255,51,0.45)" }}>
+              {line.p}
+            </span>
+            <span style={{ color: "rgba(210,245,210,0.7)" }}>{line.t}</span>
+          </div>
+        ))}
+        {lines.length > 0 && lines.length < TERM_LINES.length && (
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--green-400)", animation: "blink 1s step-end infinite" }}>█</span>
+        )}
+      </div>
     </div>
   );
 }
 
 export default function Contact() {
+  const ref = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setActive(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const copy = () => {
+    navigator.clipboard.writeText(EMAIL).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    });
+  };
+
   return (
     <section
       id="contact"
-      style={{ padding: "96px 0 64px", backgroundColor: "var(--bg-primary)" }}
+      ref={ref}
+      style={{
+        padding: "clamp(80px,10vw,160px) clamp(20px,5vw,120px)",
+        background: "linear-gradient(180deg,#0c0c0c 0%,#020402 100%)",
+        borderTop: "1px solid rgba(51,255,51,0.1)",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      {/* Separator */}
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: "80px" }}>
-        <div
-          style={{
-            width: "40%",
-            height: "1px",
-            background: "linear-gradient(to right, transparent, rgba(51,255,51,0.2), transparent)",
-          }}
-        />
-      </div>
+      <div className="ghost-num">05</div>
 
-      <div
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto",
-          padding: "0 24px",
-          textAlign: "center",
-        }}
-      >
-        {/* Section label */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+      <div style={{ position: "relative", zIndex: 2 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.35em", color: "var(--green-400)", opacity: 0.65, marginBottom: 48, textTransform: "uppercase" }}>
+          § 05 · CONTACT NODE
+        </div>
+
+        <h2
           style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "11px",
-            letterSpacing: "0.2em",
-            color: "var(--green-400)",
-            marginBottom: "24px",
+            fontFamily: "var(--font-mono)",
+            fontSize: "clamp(26px,4.5vw,68px)",
+            fontWeight: 700,
+            color: "#dff0df",
+            marginBottom: 56,
+            maxWidth: 640,
+            lineHeight: 1.08,
+            opacity: active ? 1 : 0,
+            transform: active ? "none" : "translateY(20px)",
+            transition: "all 0.8s",
           }}
         >
-          // CONTACT
-        </motion.p>
+          Ready to build<br />something<br />
+          <span style={{ color: "var(--green-400)" }}>unforgettable?</span>
+        </h2>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "16px",
-            textAlign: "left",
-            maxWidth: "480px",
-            margin: "0 auto 48px",
-            lineHeight: 1.9,
-          }}
-        >
-          {/* Command */}
-          <div style={{ marginBottom: "12px" }}>
-            <span style={{ color: "var(--green-400)" }}>$ </span>
-            <span style={{ color: "var(--text-secondary)" }}>whoami </span>
-            <span style={{ color: "var(--amber-400)" }}>--hiring</span>
-          </div>
-          {/* Output */}
-          {[
-            "open to backend, data engineering, fullstack, and ML roles.",
-            "production work across all of them, not just the first one.",
-            "Delhi NCR. Comfortable remote. Will relocate for the right thing.",
-          ].map((line, i) => (
-            <div key={i} style={{ display: "flex", gap: "10px" }}>
-              <span style={{ color: "var(--green-400)", flexShrink: 0 }}>{">"}</span>
-              <span style={{ color: "var(--text-secondary)" }}>{line}</span>
-            </div>
-          ))}
-        </motion.div>
+        <Terminal active={active} />
 
-        {/* Typed email */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          style={{ marginBottom: "48px" }}
-        >
-          <TypedEmail />
-        </motion.div>
-
-        {/* Social links — MagneticButton */}
         <div
           style={{
             display: "flex",
-            gap: "16px",
-            justifyContent: "center",
+            gap: 10,
             flexWrap: "wrap",
+            opacity: active ? 1 : 0,
+            transition: "all 0.8s 0.45s",
+            marginBottom: 80,
           }}
         >
-          {socials.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.4 + i * 0.08 }}
+          <a
+            href={`mailto:${EMAIL}`}
+            style={{
+              fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em",
+              background: "var(--green-400)", color: "#000",
+              border: "none", padding: "13px 28px",
+              cursor: "pointer", transition: "background 0.2s", textDecoration: "none",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#fff")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "var(--green-400)")}
+          >
+            EMAIL ME →
+          </a>
+          {[
+            { label: "LINKEDIN", href: LINKEDIN, external: true },
+            { label: "GITHUB", href: GITHUB, external: true },
+            { label: "↓ RESUME", href: RESUME, download: "Divyansh_Chawla_Resume.pdf" },
+          ].map((btn) => (
+            <a
+              key={btn.label}
+              href={btn.href}
+              target={"external" in btn ? "_blank" : undefined}
+              rel={"external" in btn ? "noreferrer" : undefined}
+              download={"download" in btn ? btn.download : undefined}
+              style={{
+                fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em",
+                background: "transparent", color: "var(--green-400)",
+                border: "1px solid var(--green-400)", padding: "13px 28px",
+                cursor: "pointer", transition: "background 0.2s", textDecoration: "none",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(51,255,51,0.07)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
-              <MagneticButton
-                as="a"
-                strength={0.3}
-                href={s.href}
-                target={s.external ? "_blank" : undefined}
-                rel={s.external ? "noopener noreferrer" : undefined}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  letterSpacing: "0.1em",
-                  color: "var(--text-secondary)",
-                  textDecoration: "none",
-                  border: "1px solid #1a1a1a",
-                  padding: "9px 20px",
-                  display: "inline-block",
-                  transition: "border-color 0.2s, color 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--green-400)";
-                  (e.currentTarget as HTMLElement).style.color = "var(--green-400)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "#1a1a1a";
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                }}
-              >
-                [{s.label}]
-              </MagneticButton>
-            </motion.div>
+              {btn.label}
+            </a>
           ))}
+          <button
+            onClick={copy}
+            style={{
+              fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em",
+              background: "transparent", color: "rgba(224,255,224,0.35)",
+              border: "1px solid rgba(51,255,51,0.15)", padding: "13px 28px",
+              cursor: "pointer", transition: "color 0.2s, border-color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--green-400)";
+              e.currentTarget.style.borderColor = "rgba(51,255,51,0.45)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "rgba(224,255,224,0.35)";
+              e.currentTarget.style.borderColor = "rgba(51,255,51,0.15)";
+            }}
+          >
+            {copied ? "✓ COPIED" : "⎘ COPY EMAIL"}
+          </button>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div
-        style={{
-          marginTop: "80px",
-          paddingTop: "24px",
-          borderTop: "1px solid #1a1a1a",
-          textAlign: "center",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "11px",
-            color: "var(--text-tertiary)",
-            letterSpacing: "0.15em",
-          }}
-        >
-          {"─".repeat(12)} Designed & Built by Divyansh Chawla {"─".repeat(12)}
-        </p>
+        <div style={{ paddingTop: 24, borderTop: "1px solid rgba(51,255,51,0.1)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(51,255,51,0.25)", letterSpacing: "0.2em" }}>
+            © {new Date().getFullYear()} DIVYANSH CHAWLA
+          </span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(51,255,51,0.25)", letterSpacing: "0.2em" }}>
+            BUILT WITH LOVE + TERMINAL ENERGY
+          </span>
+        </div>
       </div>
     </section>
   );

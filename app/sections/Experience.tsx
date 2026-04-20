@@ -1,227 +1,133 @@
 "use client";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const experience = [
+const EXP = [
   {
+    period: "Nov 2025 — Present",
     role: "Senior Python Developer",
-    company: "DesignX",
-    period: "Nov 2025 – Present",
+    org: "DesignX · via Hero MotoCorp",
     bullets: [
       "Python microservices and REST APIs running in production at Hero MotoCorp.",
       "Kafka Connect pipelines sync 400+ enterprise tables across MySQL. Dockerized, zero manual intervention.",
       "200+ Airflow DAGs in production. ETL orchestration, automated alerting, scheduled jobs.",
       "IoT telemetry pipeline at 500+ events/hour. Bidirectional SAP ECC integration for real-time manufacturing data.",
     ],
-    tech: ["Python", "FastAPI", "Apache Kafka", "Apache Airflow", "Docker", "SAP ECC", "MySQL"],
+    tags: ["Python", "Kafka", "Airflow", "FastAPI", "Hero MotoCorp"],
   },
   {
+    period: "Aug 2024 — Nov 2025",
     role: "Python Developer",
-    company: "DesignX",
-    period: "Aug 2024 – Nov 2025",
+    org: "DesignX",
     bullets: [
       "150+ REST APIs, 30+ Python modules, 35+ IoT transformation pipelines.",
-      "Migrated legacy PHP backends to Python. Improved performance via query optimization, indexing, and table partitioning.",
+      "Migrated legacy PHP backends to Python. Improved performance via query optimization and table partitioning.",
       "Digitized PQCS and NPD manufacturing workflows for Hero MotoCorp.",
-      "Automated dashboards and validation pipelines cut manual reporting effort by 80%.",
+      "Automation cut manual reporting effort by 80%.",
     ],
-    tech: ["Python", "Django", "Django REST Framework", "PostgreSQL", "Redis", "ETL Pipelines"],
+    tags: ["Python", "Django", "PostgreSQL", "Docker", "AWS"],
   },
 ];
 
 export default function Experience() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const railFillRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const fn = () => {
+      if (!sectionRef.current || !railFillRef.current) return;
+      const r = sectionRef.current.getBoundingClientRect();
+      const p = Math.min(Math.max((-r.top + window.innerHeight * 0.55) / r.height, 0), 1);
+      railFillRef.current.style.height = `${p * 100}%`;
+    };
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(sectionRef.current);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <section
       id="experience"
-      style={{ padding: "96px 0", backgroundColor: "var(--bg-primary)" }}
+      ref={sectionRef}
+      style={{
+        padding: "clamp(80px,10vw,160px) clamp(20px,5vw,120px)",
+        background: "linear-gradient(180deg,#080808 0%,#0c0c0c 100%)",
+        borderTop: "1px solid rgba(51,255,51,0.1)",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
-        {/* Section label */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{
-            fontFamily: "var(--font-code)",
-            fontSize: "11px",
-            letterSpacing: "0.2em",
-            color: "var(--green-400)",
-            marginBottom: "48px",
-          }}
-        >
-          // EXPERIENCE
-        </motion.p>
+      <div className="ghost-num">02</div>
 
-        {/* Timeline */}
-        <div style={{ position: "relative" }}>
-          {/* Vertical line */}
-          <motion.div
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            style={{
-              position: "absolute",
-              left: "0",
-              top: "8px",
-              bottom: "8px",
-              width: "1px",
-              backgroundColor: "rgba(51,255,51,0.15)",
-              transformOrigin: "top",
-            }}
-          />
+      <div style={{ position: "relative", zIndex: 2 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.35em", color: "var(--green-400)", opacity: 0.65, marginBottom: 48, textTransform: "uppercase" }}>
+          § 02 · JOURNEY
+        </div>
+        <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(26px,3.5vw,48px)", fontWeight: 700, color: "#dff0df", marginBottom: 72 }}>
+          Where I&apos;ve been.
+        </h2>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "64px" }}>
-            {experience.map((job, i) => (
-              <motion.div
+        <div style={{ display: "flex", gap: "clamp(32px,5vw,72px)" }}>
+          <div style={{ position: "relative", width: 2, flexShrink: 0, background: "rgba(51,255,51,0.08)", alignSelf: "stretch", minHeight: 300 }}>
+            <div
+              ref={railFillRef}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "0%",
+                background: "var(--amber-400)",
+                boxShadow: "0 0 10px var(--amber-400)",
+                transition: "height 0.08s",
+              }}
+            />
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 72, flex: 1 }}>
+            {EXP.map((n, i) => (
+              <div
                 key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
-                style={{ paddingLeft: "28px", position: "relative" }}
+                style={{
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? "none" : "translateX(-20px)",
+                  transition: `all 0.8s ${i * 0.2}s`,
+                }}
               >
-                {/* Timeline dot */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "-4px",
-                    top: "4px",
-                    width: "9px",
-                    height: "9px",
-                    borderRadius: "50%",
-                    backgroundColor: "var(--green-400)",
-                    boxShadow: "0 0 8px rgba(51,255,51,0.5)",
-                    flexShrink: 0,
-                  }}
-                />
-
-                {/* Terminal header */}
-                <div
-                  style={{
-                    fontFamily: "var(--font-code)",
-                    fontSize: "11px",
-                    color: "var(--text-tertiary)",
-                    marginBottom: "12px",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  <span style={{ color: "var(--green-400)" }}>$ </span>
-                  <span style={{ color: "var(--text-secondary)" }}>history </span>
-                  <span style={{ color: "var(--amber-400)" }}>--role</span>
-                  <span style={{ color: "var(--text-primary)" }}>
-                    {" "}&quot;{job.role}&quot;
-                  </span>
-                  <span style={{ color: "var(--amber-400)" }}> --company</span>
-                  <span style={{ color: "var(--text-primary)" }}>
-                    {" "}&quot;{job.company}&quot;
-                  </span>
-                  <span style={{ color: "var(--amber-400)" }}> --period</span>
-                  <span style={{ color: "var(--text-primary)" }}>
-                    {" "}&quot;{job.period}&quot;
-                  </span>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--amber-400)", letterSpacing: "0.2em", marginBottom: 10 }}>
+                  {n.period}
                 </div>
-
-                {/* Role + company */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "baseline",
-                    gap: "8px",
-                    marginBottom: "16px",
-                  }}
-                >
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "18px",
-                      fontWeight: 700,
-                      color: "var(--text-primary)",
-                      margin: 0,
-                    }}
-                  >
-                    {job.role}
-                  </h3>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-code)",
-                      fontSize: "13px",
-                      color: "var(--text-secondary)",
-                    }}
-                  >
-                    · {job.company}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-code)",
-                      fontSize: "11px",
-                      color: "var(--text-tertiary)",
-                      border: "1px solid #1a1a1a",
-                      padding: "2px 8px",
-                      marginLeft: "auto",
-                    }}
-                  >
-                    {job.period}
-                  </span>
+                <h3 style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(16px,2vw,24px)", fontWeight: 700, color: "#dff0df", marginBottom: 6 }}>
+                  {n.role}
+                </h3>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "rgba(51,255,51,0.45)", marginBottom: 20, letterSpacing: "0.08em" }}>
+                  @ {n.org}
                 </div>
-
-                {/* Bullets */}
-                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                  {job.bullets.map((bullet, bi) => (
-                    <motion.li
-                      key={bi}
-                      initial={{ opacity: 0, x: -8 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.1 + bi * 0.07 }}
-                      style={{
-                        display: "flex",
-                        gap: "10px",
-                        fontFamily: "var(--font-sans)",
-                        fontWeight: 300,
-                        fontSize: "15px",
-                        lineHeight: 1.65,
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          color: "var(--green-400)",
-                          flexShrink: 0,
-                          marginTop: "0.25em",
-                          fontSize: "12px",
-                        }}
-                      >
-                        →
-                      </span>
-                      {bullet}
-                    </motion.li>
+                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+                  {n.bullets.map((b, bi) => (
+                    <li key={bi} style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.75, color: "rgba(200,240,200,0.48)", paddingLeft: 18, position: "relative", fontWeight: 300 }}>
+                      <span style={{ position: "absolute", left: 0, color: "var(--green-400)" }}>›</span>
+                      {b}
+                    </li>
                   ))}
                 </ul>
-
-                {/* Tech tags */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                  {job.tech.map((t, ti) => (
-                    <motion.span
-                      key={t}
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: 0.3 + ti * 0.05 }}
-                      style={{
-                        fontFamily: "var(--font-code)",
-                        fontSize: "11px",
-                        color: "var(--text-secondary)",
-                        border: "1px solid var(--border-green)",
-                        padding: "3px 8px",
-                      }}
-                    >
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                  {n.tags.map((t) => (
+                    <span key={t} style={{ fontFamily: "var(--font-mono)", fontSize: 10, padding: "4px 9px", border: "1px solid rgba(255,170,0,0.22)", color: "rgba(255,170,0,0.65)" }}>
                       {t}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

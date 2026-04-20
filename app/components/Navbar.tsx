@@ -1,20 +1,101 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const links = ["About", "Skills", "Experience", "Projects", "Contact"];
+const LINKS = [
+  { label: "About", id: "about" },
+  { label: "Experience", id: "experience" },
+  { label: "Projects", id: "projects" },
+  { label: "Skills", id: "skills" },
+  { label: "Contact", id: "contact" },
+];
 
-function scrollToSection(sectionId: string) {
-  const element = document.getElementById(sectionId);
-  if (!element) return;
+const RESUME_PATH = "/resume.pdf";
+
+function DCLogo() {
+  return (
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ flexShrink: 0 }}>
+      <path d="M5 0L29 0L34 5L34 29L29 34L5 34L0 29L0 5Z" stroke="var(--green-400)" strokeWidth="1" fill="none"/>
+      <path d="M8 9L8 25L15 25Q21 25 21 17Q21 9 15 9Z" stroke="var(--green-400)" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+      <path d="M28 12Q22 8 22 17Q22 26 28 22" stroke="var(--green-400)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <circle cx="5" cy="5" r="1.8" fill="var(--green-400)"/>
+      <circle cx="29" cy="5" r="1.8" fill="var(--green-400)"/>
+      <circle cx="5" cy="29" r="1.8" fill="var(--green-400)"/>
+      <circle cx="29" cy="29" r="1.8" fill="var(--green-400)"/>
+      <line x1="8" y1="9" x2="5" y2="5" stroke="var(--green-400)" strokeWidth="0.5" opacity="0.4"/>
+      <line x1="8" y1="25" x2="5" y2="29" stroke="var(--green-400)" strokeWidth="0.5" opacity="0.4"/>
+    </svg>
+  );
+}
+
+function MagneticNavLink({
+  label,
+  id,
+  isActive,
+  onClick,
+}: {
+  label: string;
+  id: string;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const ref = useRef<HTMLButtonElement>(null);
+
+  const onMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - (r.left + r.width / 2);
+    const y = e.clientY - (r.top + r.height / 2);
+    el.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px)`;
+    el.style.color = "var(--green-400)";
+  };
+
+  const onLeave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = "translate(0, 0)";
+    el.style.color = isActive ? "var(--green-400)" : "rgba(200,240,200,0.45)";
+  };
+
+  return (
+    <button
+      ref={ref}
+      onClick={onClick}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        fontFamily: "var(--font-mono)",
+        fontSize: 11,
+        letterSpacing: "0.12em",
+        color: isActive ? "var(--green-400)" : "rgba(200,240,200,0.45)",
+        padding: "4px 0",
+        position: "relative",
+        transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), color 0.2s",
+        willChange: "transform",
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+      }}
+    >
+      {isActive && (
+        <span style={{ position: "absolute", left: -14, color: "var(--amber-400)", fontSize: 10 }}>▸</span>
+      )}
+      {label}
+    </button>
+  );
+}
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
   if (window.__lenis) {
-    window.__lenis.scrollTo(element, {
-      offset: -72,
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
+    window.__lenis.scrollTo(el, { offset: -72, duration: 1.2, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   } else {
-    element.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
 
@@ -38,30 +119,14 @@ export default function Navbar() {
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    links.forEach((link) => {
-      const el = document.getElementById(link.toLowerCase());
+    LINKS.forEach(({ id }) => {
+      const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
   }, []);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
-
-  const navLinkStyle = (id: string): React.CSSProperties => ({
-    fontFamily: "var(--font-mono)",
-    fontSize: "12px",
-    fontWeight: 400,
-    letterSpacing: "0.08em",
-    color: activeSection === id ? "var(--green-400)" : "#888888",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    transition: "color 0.2s",
-  });
 
   return (
     <>
@@ -72,117 +137,96 @@ export default function Navbar() {
         style={{
           position: "fixed",
           top: 0,
-          width: "100%",
-          zIndex: 50,
-          backgroundColor: scrolled ? "rgba(10,10,10,0.92)" : "transparent",
-          backdropFilter: scrolled ? "blur(16px)" : "none",
-          borderBottom: scrolled ? "1px solid #1a1a1a" : "1px solid transparent",
-          transition: "background-color 0.3s, border-color 0.3s, backdrop-filter 0.3s",
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 clamp(20px,5vw,80px)",
+          height: 68,
+          background: scrolled ? "rgba(6,10,6,0.88)" : "transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(51,255,51,0.12)" : "none",
+          transition: "all 0.4s",
         }}
       >
-        <div
+        <button
+          onClick={() => scrollToSection("hero")}
           style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "0 32px",
-            height: "56px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            gap: 10,
+            color: "var(--green-400)",
           }}
         >
-          {/* Logo */}
-          <button
-            onClick={() => scrollToSection("hero")}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "14px",
-              fontWeight: 700,
-              color: "var(--green-400)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              letterSpacing: "0.05em",
-              textShadow: "0 0 10px rgba(51,255,51,0.4)",
-              padding: 0,
-            }}
-          >
-            DC
-          </button>
+          <DCLogo />
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.12em", color: "var(--green-400)" }}>DC</span>
+        </button>
 
-          {/* Desktop nav */}
-          <ul
-            className="hidden md:flex"
-            style={{ gap: "32px", listStyle: "none", margin: 0, padding: 0 }}
-          >
-            {links.map((link) => {
-              const id = link.toLowerCase();
-              const isActive = activeSection === id;
-              return (
-                <li key={link}>
-                  <button
-                    onClick={() => scrollToSection(id)}
-                    style={navLinkStyle(id)}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.color = "var(--green-400)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.color = isActive
-                        ? "var(--green-400)"
-                        : "#888888")
-                    }
-                  >
-                    {isActive && (
-                      <span style={{ color: "var(--green-400)", fontSize: "10px" }}>▸</span>
-                    )}
-                    {link}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              gap: "5px",
-              padding: "4px",
-            }}
-          >
-            {[0, 1, 2].map((i) => (
-              <motion.span
-                key={i}
-                style={{
-                  display: "block",
-                  width: "22px",
-                  height: "1px",
-                  backgroundColor: menuOpen ? "var(--green-400)" : "#888888",
-                  transformOrigin: "center",
-                }}
-                animate={
-                  menuOpen
-                    ? i === 0
-                      ? { rotate: 45, y: 6 }
-                      : i === 1
-                      ? { opacity: 0 }
-                      : { rotate: -45, y: -6 }
-                    : { rotate: 0, y: 0, opacity: 1 }
-                }
+        <ul
+          className="hidden md:flex"
+          style={{ gap: 36, listStyle: "none", margin: 0, padding: 0, alignItems: "center" }}
+        >
+          {LINKS.map(({ label, id }) => (
+            <li key={id}>
+              <MagneticNavLink
+                label={label}
+                id={id}
+                isActive={activeSection === id}
+                onClick={() => scrollToSection(id)}
               />
-            ))}
-          </button>
-        </div>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={RESUME_PATH}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden md:inline-flex"
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            background: "none",
+            border: "1px solid var(--green-400)",
+            color: "var(--green-400)",
+            padding: "8px 16px",
+            cursor: "pointer",
+            textDecoration: "none",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(51,255,51,0.07)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "none";
+          }}
+        >
+          ↓ RESUME
+        </a>
+
+        <button
+          className="md:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "var(--green-400)",
+            fontSize: 22,
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          {menuOpen ? "✕" : "≡"}
+        </button>
       </motion.nav>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -193,56 +237,35 @@ export default function Navbar() {
             style={{
               position: "fixed",
               inset: 0,
-              zIndex: 40,
-              backgroundColor: "rgba(10,10,10,0.97)",
+              zIndex: 999,
+              background: "#080808",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              gap: 48,
             }}
           >
-            <ul
-              style={{
-                listStyle: "none",
-                margin: 0,
-                padding: 0,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "28px",
-              }}
-            >
-              {links.map((link, i) => {
-                const id = link.toLowerCase();
-                return (
-                  <motion.li
-                    key={link}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07 }}
-                  >
-                    <button
-                      onClick={() => {
-                        scrollToSection(id);
-                        closeMenu();
-                      }}
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "24px",
-                        fontWeight: 700,
-                        color: activeSection === id ? "var(--green-400)" : "#e0e0e0",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        letterSpacing: "0.1em",
-                      }}
-                    >
-                      {link}
-                    </button>
-                  </motion.li>
-                );
-              })}
-            </ul>
+            {LINKS.map(({ label, id }, i) => (
+              <motion.button
+                key={id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.07 }}
+                onClick={() => { scrollToSection(id); closeMenu(); }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 28,
+                  letterSpacing: "0.2em",
+                  color: activeSection === id ? "var(--green-400)" : "#e0e0e0",
+                }}
+              >
+                {label}
+              </motion.button>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>

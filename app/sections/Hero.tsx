@@ -147,7 +147,7 @@ export default function Hero() {
         <h1
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "clamp(44px,9.5vw,148px)",
+            fontSize: "clamp(28px,9.5vw,148px)",
             fontWeight: 700,
             lineHeight: 0.88,
             letterSpacing: "-0.02em",
@@ -157,7 +157,7 @@ export default function Hero() {
             backgroundClip: "text",
             margin: "0 0 28px",
             minWidth: "4ch",
-            whiteSpace: "pre",
+            whiteSpace: "pre-wrap",
           }}
         >
           {display || "00000000\n000000"}
@@ -241,6 +241,7 @@ export default function Hero() {
       </div>
 
       <div
+        className="hidden sm:flex"
         style={{
           position: "absolute",
           bottom: 36,
@@ -252,7 +253,6 @@ export default function Hero() {
           writingMode: "vertical-rl",
           textOrientation: "mixed",
           opacity: heroOpacity,
-          display: "flex",
           alignItems: "center",
           gap: 8,
         }}

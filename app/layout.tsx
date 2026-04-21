@@ -47,8 +47,7 @@ export default function RootLayout({
       className={`${spaceMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
     >
       <body
-        className="bg-[#0a0a0a] text-[#e0e0e0] min-h-screen overflow-x-hidden"
-        style={{ cursor: "none" }}
+        className="bg-[#0a0a0a] text-[#e0e0e0] min-h-screen overflow-x-hidden custom-cursor-body"
       >
         <ScrollProgress />
         <ChapterHUD />

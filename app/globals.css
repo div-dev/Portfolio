@@ -211,6 +211,29 @@ body {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
+/* ─── CURSOR: hide only on pointer devices, not touch ─── */
+@media (pointer: fine) {
+  .custom-cursor-body { cursor: none; }
+}
+
+/* ─── PROJECTS MOBILE: stack rows vertically ─── */
+@media (max-width: 640px) {
+  .project-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+  .project-meta {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-width: auto !important;
+  }
+  .project-content {
+    width: 100%;
+  }
+}
+
 /* ─── SCROLL BAR ─── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }

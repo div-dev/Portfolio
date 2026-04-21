@@ -79,6 +79,7 @@ export default function Projects() {
             href={p.link}
             target="_blank"
             rel="noreferrer"
+            className="project-row"
             onMouseEnter={() => setHov(i)}
             onMouseLeave={() => setHov(null)}
             style={{
@@ -114,7 +115,7 @@ export default function Projects() {
               {p.id}
             </div>
 
-            <div style={{ flex: 1, transform: hov === i ? "translateX(14px)" : "none", transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)" }}>
+            <div className="project-content" style={{ flex: 1, transform: hov === i ? "translateX(14px)" : "none", transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)" }}>
               <div style={{ display: "flex", alignItems: "baseline", gap: 16, marginBottom: 10, flexWrap: "wrap" }}>
                 <h3
                   style={{
@@ -138,7 +139,7 @@ export default function Projects() {
               </p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, minWidth: 56, flexShrink: 0 }}>
+            <div className="project-meta" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, minWidth: 56, flexShrink: 0 }}>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(51,255,51,0.3)", letterSpacing: "0.2em" }}>{p.year}</span>
               <span style={{ color: hov === i ? "var(--amber-400)" : "var(--green-400)", fontSize: 22, transform: hov === i ? "translateX(8px)" : "none", transition: "all 0.25s" }}>
                 →

@@ -186,7 +186,7 @@ export default function Contact() {
             © {new Date().getFullYear()} DIVYANSH CHAWLA
           </span>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(51,255,51,0.25)", letterSpacing: "0.2em" }}>
-            BUILT WITH LOVE + TERMINAL ENERGY
+            WRITTEN IN THE DARK, SHIPPED IN THE GREEN
           </span>
         </div>
       </div>

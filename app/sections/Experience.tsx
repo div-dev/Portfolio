@@ -5,9 +5,9 @@ const EXP = [
   {
     period: "Nov 2025 — Present",
     role: "Senior Python Developer",
-    org: "DesignX · via Hero MotoCorp",
+    org: "DesignX",
     bullets: [
-      "Python microservices and REST APIs running in production at Hero MotoCorp.",
+      "Python microservices and REST APIs running in production for Hero MotoCorp, HUL, Mondelez, and Dabur.",
       "Kafka Connect pipelines sync 400+ enterprise tables across MySQL. Dockerized, zero manual intervention.",
       "200+ Airflow DAGs in production. ETL orchestration, automated alerting, scheduled jobs.",
       "IoT telemetry pipeline at 500+ events/hour. Bidirectional SAP ECC integration for real-time manufacturing data.",
@@ -21,7 +21,7 @@ const EXP = [
     bullets: [
       "150+ REST APIs, 30+ Python modules, 35+ IoT transformation pipelines.",
       "Migrated legacy PHP backends to Python. Improved performance via query optimization and table partitioning.",
-      "Digitized PQCS and NPD manufacturing workflows for Hero MotoCorp.",
+      "Led NPD manufacturing workflow end-to-end across Hero MotoCorp, HUL, Mondelez, and Dabur; digitized PQCS and NPD processes.",
       "Automation cut manual reporting effort by 80%.",
     ],
     tags: ["Python", "Django", "PostgreSQL", "Docker", "AWS"],
